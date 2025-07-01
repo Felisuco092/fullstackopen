@@ -4,6 +4,41 @@ const Person = ({name, number}) => {
   return <p>{name} {number}</p>
 }
 
+const Filter = ({filter, setFilter}) => {
+  return (
+    <div>
+        filter shown with<input value={filter} onChange={(event) => setFilter(event.target.value)}/>
+    </div>
+  )
+}
+
+const PersonForm = ({handleSubmit, newName, setNewName, number, setNumber}) => {
+  return (
+    <form onSubmit={handleSubmit}>
+        <div>
+          name: <input value={newName}
+            onChange={(event) => 
+            setNewName(event.target.value)}/>
+        </div>
+        <div>number: <input value={number}
+            onChange={(event) => 
+            setNumber(event.target.value)}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+  )
+}
+
+const Persons = ({filterObject}) => {
+  return (
+    <>
+      {filterObject.map((person) => <Person key={person.name} name={person.name} number={person.number}/>)}
+    </>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: "040-1234567"}
@@ -39,26 +74,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with<input value={filter} onChange={(event) => setFilter(event.target.value)}/>
-      </div>
+      <Filter filter={filter} setFilter={setFilter}/>
       <h2>add a new</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName}
-            onChange={(event) => 
-            setNewName(event.target.value)}/>
-        </div>
-        <div>number: <input value={number}
-            onChange={(event) => 
-            setNumber(event.target.value)}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm 
+      handleSubmit={handleSubmit}
+      newName={newName}
+      setNewName={setNewName}
+      number={number}
+      setNumber={setNumber}
+      />
       <h2>Numbers</h2>
-      {filterObject.map((person) => <Person key={person.name} name={person.name} number={person.number}/>)}
+      <Persons filterObject={filterObject} />
     </div>
   )
 }
