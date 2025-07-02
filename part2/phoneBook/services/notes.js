@@ -12,5 +12,5 @@ const create = (data) => {
     const request = axios.post(baseUrl, data)
     return request.then(response => response.data)
 }
-
+//Is done in the previous exercise
 export default { getAll, create }
