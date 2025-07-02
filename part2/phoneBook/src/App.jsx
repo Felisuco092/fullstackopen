@@ -66,7 +66,7 @@ const App = () => {
   
   
   const filterObject = persons.filter(person => {
-        return person.name.toLowerCase().startsWith(filter.toLowerCase())
+        return person.name.toLowerCase().includes(filter.toLowerCase())
       })
 
   
