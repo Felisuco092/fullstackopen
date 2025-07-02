@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react'
 import notesManagement from '../services/notes'
 
-const Person = ({name, number}) => {
-  return <p>{name} {number}</p>
+const Person = ({name, number, handleDelete, id}) => {
+  return (
+    <>
+      {name} {number}
+      <button onClick={handleDelete(name, id)}>delete</button>
+      <br />
+    </>
+  )
 }
 
 const Filter = ({filter, setFilter}) => {
@@ -32,10 +38,12 @@ const PersonForm = ({handleSubmit, newName, setNewName, number, setNumber}) => {
   )
 }
 
-const Persons = ({filterObject}) => {
+const Persons = ({filterObject, handleDelete}) => {
   return (
     <>
-      {filterObject.map((person) => <Person key={person.name} name={person.name} number={person.number}/>)}
+      {filterObject.map((person) => <Person 
+        key={person.name} name={person.name} number={person.number}
+        handleDelete={handleDelete} id={person.id}/>)}
     </>
   )
 }
@@ -71,7 +79,17 @@ const App = () => {
   }
 
 
-
+  const handleDelete = (name, id) => {
+    return () => {
+      if(confirm(`Delete ${name} ?`)) {
+        notesManagement
+          .deleteNote(id)
+          .then(deletedNote => {
+            setPersons(persons.filter(person => person.id !== id))
+          })
+      }
+    }
+  }
   
   
   
@@ -95,7 +113,7 @@ const App = () => {
       setNumber={setNumber}
       />
       <h2>Numbers</h2>
-      <Persons filterObject={filterObject} />
+      <Persons filterObject={filterObject} handleDelete={handleDelete}/>
     </div>
   )
 }

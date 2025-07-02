@@ -12,5 +12,9 @@ const create = (data) => {
     const request = axios.post(baseUrl, data)
     return request.then(response => response.data)
 }
-//Is done in the previous exercise
-export default { getAll, create }
+
+const deleteNote = (id) => {
+    const request = axios.delete(`${baseUrl}/${id}`)
+    return request.then(response => response.data)
+}
+export default { getAll, create, deleteNote }
