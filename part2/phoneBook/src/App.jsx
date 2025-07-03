@@ -65,8 +65,20 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if(persons.some((person) => person.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`)
+    const message = `${newName} is already added to phonebook, replace the old with a new one?`
+    if(persons.some((person) => person.name === newName )) {
+      if(confirm(message)) {
+        const personFind = persons.find((person) => person.name === newName)
+        const newPerson = {...personFind, number: number}
+        notesManagement
+          .update(personFind.id, newPerson)
+          .then((serverResponse) => {
+            const indexPerson = persons.findIndex(person => person.id === personFind.id)
+            const copyPersons = [...persons]
+            copyPersons[indexPerson] = newPerson
+            setPersons(copyPersons)
+          })
+      }
     } else {
       const newPerson = { name: newName, number: number}
       notesManagement
