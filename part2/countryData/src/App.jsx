@@ -1,23 +1,49 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Display = ({show}) => {
+const Country = ({country}) => {
+  
+  return (
+    <>
+        <h1>{country.name.common}</h1>
+        Capital {country.capital} <br/>
+        Area {country.area}
+        <h2>Languages</h2>
+        <ul>
+          {Object.values(country.languages).map((language) => <li key={language}>{language}</li>)}
+        </ul>
+        <img src={country.flags.png}/>
+      </>
+  )
+}
+
+const Display = ({show, index, setIndex}) => {
+  const handleClick = (name) => {
+    return () => {
+      //console.log("index", show.findIndex((country) => country.name.common === name));
+      
+      return setIndex(show.findIndex((country) => country.name.common === name))
+    }
+  }
+
   if(show.length >= 10) {
     return <p>Too many matches, specify another file</p>
   } else if(show.length > 1 && show.length <= 10) {
-    return show.map((country) => <>{country.name.common}<br/></>)
+    if(!index && index !== 0) {
+      return show.map((country) =>  {
+        return (
+          <div key={country.name.common}>
+            {country.name.common} 
+            <button onClick={handleClick(country.name.common)}>Show</button><br/>
+          </div>
+        )
+      })
+    } else {
+      return <Country country={show[index]} />
+    }
   } else if(show.length == 1) {
     return (
-      <>
-        <h1>{show[0].name.common}</h1>
-        Capital {show[0].capital} <br/>
-        Area {show[0].area}
-        <h2>Languages</h2>
-        <ul>
-          {Object.values(show[0].languages).map((language) => <li>{language}</li>)}
-        </ul>
-        <img src={show[0].flags.png}/>
-      </>
+      <Country country={show[0]}/>
     )
   } else {
     return null
@@ -27,9 +53,11 @@ const Display = ({show}) => {
 const App = () => {
   const [search, setSearch] = useState('')
   const [countries, setCountries] = useState([])
+  const [index, setIndex] = useState(null)
 
   const handleSearch = (event) => {
     setSearch(event.target.value)
+    setIndex(null)
   }
 
   useEffect(() => {
@@ -41,7 +69,7 @@ const App = () => {
     if(search === '') return false
     return country.name.common.toLowerCase().includes(search.toLowerCase())
   })
-  console.log(show);
+
   
   
   
@@ -51,7 +79,7 @@ const App = () => {
       <form>
         find countries <input value={search} onChange={handleSearch}/>
       </form>
-      <Display show={show}/>
+      <Display show={show} index={index} setIndex={setIndex}/>
     </>
   )
 }
