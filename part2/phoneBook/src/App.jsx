@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import notesManagement from '../services/notes'
+import notesManagement from './services/notes'
 
 const Person = ({name, number, handleDelete, id}) => {
   return (
