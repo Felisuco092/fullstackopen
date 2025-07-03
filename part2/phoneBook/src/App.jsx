@@ -13,6 +13,18 @@ const NotificationSuccess = ({ message }) => {
   )
 }
 
+const NotificationError = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 const Person = ({name, number, handleDelete, id}) => {
   return (
     <>
@@ -66,6 +78,7 @@ const App = () => {
   const [number, setNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
   useEffect(() => {
@@ -90,6 +103,13 @@ const App = () => {
             const copyPersons = [...persons]
             copyPersons[indexPerson] = newPerson
             setPersons(copyPersons)
+          })
+          .catch((error) => {
+            setErrorMessage(`Information of ${newName} has already been removed from server`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            },3000)
+            setPersons(persons.filter((person) => person.name !== newName))
           })
       }
     } else {
@@ -119,6 +139,9 @@ const App = () => {
           .then(deletedNote => {
             setPersons(persons.filter(person => person.id !== id))
           })
+          .catch((error) => {
+            setPersons(persons.filter((person) => person.name !== name))
+          })
       }
     }
   }
@@ -136,6 +159,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <NotificationSuccess message={successMessage} />
+      <NotificationError message={errorMessage} />
       <Filter filter={filter} setFilter={setFilter}/>
       <h2>add a new</h2>
       <PersonForm 
