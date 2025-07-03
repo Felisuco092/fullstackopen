@@ -1,6 +1,18 @@
 import { useState, useEffect } from 'react'
 import notesManagement from './services/notes'
 
+const NotificationSuccess = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="success">
+      {message}
+    </div>
+  )
+}
+
 const Person = ({name, number, handleDelete, id}) => {
   return (
     <>
@@ -53,6 +65,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [number, setNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
 
   useEffect(() => {
@@ -83,8 +96,15 @@ const App = () => {
       const newPerson = { name: newName, number: number}
       notesManagement
         .create(newPerson)
-        .then(serverResponse => 
-          setPersons(persons.concat(serverResponse)))
+        .then(serverResponse =>  {
+          setPersons(persons.concat(serverResponse))
+          setSuccessMessage(
+          `Added ${newName}`
+          )
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000)
+        })
     }
     setNewName('')
     setNumber('')
@@ -115,6 +135,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotificationSuccess message={successMessage} />
       <Filter filter={filter} setFilter={setFilter}/>
       <h2>add a new</h2>
       <PersonForm 
