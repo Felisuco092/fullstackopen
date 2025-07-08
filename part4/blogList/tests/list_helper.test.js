@@ -80,3 +80,88 @@ describe('favourite blog', () => {
         })
     })
 })
+
+describe('most blogs', () => {
+    test('author with most Blogs', () => {
+        const blogs = [
+            {
+                title: "Clean Code",
+                author: "Robert C. Martin",
+                url: "http://example.com/cleancode",
+                likes: 10
+            },
+            {
+                title: "Refactoring",
+                author: "Martin Fowler",
+                url: "http://example.com/refactoring",
+                likes: 5
+            },
+            {
+                title: "Agile Principles",
+                author: "Robert C. Martin",
+                url: "http://example.com/agile",
+                likes: 7
+            },
+            {
+                title: "TDD by Example",
+                author: "Kent Beck",
+                url: "http://example.com/tdd",
+                likes: 12
+            },
+            {
+                title: "The Clean Coder",
+                author: "Robert C. Martin",
+                url: "http://example.com/cleancoder",
+                likes: 8
+            }
+            ];
+        const result = listHelper.mostBlogs(blogs)
+        assert.deepStrictEqual(result, {
+            author: "Robert C. Martin",
+            blogs: 3
+        })
+
+    })
+})
+
+describe('most likes', () => {
+    test('author with most likes', () => {
+        const blogs = [
+            {
+                title: "Clean Code",
+                author: "Robert C. Martin",
+                url: "http://example.com/cleancode",
+                likes: 10
+            },
+            {
+                title: "Refactoring",
+                author: "Martin Fowler",
+                url: "http://example.com/refactoring",
+                likes: 5
+            },
+            {
+                title: "Agile Principles",
+                author: "Robert C. Martin",
+                url: "http://example.com/agile",
+                likes: 7
+            },
+            {
+                title: "TDD by Example",
+                author: "Kent Beck",
+                url: "http://example.com/tdd",
+                likes: 12
+            },
+            {
+                title: "The Clean Coder",
+                author: "Robert C. Martin",
+                url: "http://example.com/cleancoder",
+                likes: 8
+            }
+            ];
+        const result = listHelper.mostLikes(blogs)
+        assert.deepStrictEqual(result, {
+            author: "Kent Beck",
+            likes: 12
+        })
+    })
+})
