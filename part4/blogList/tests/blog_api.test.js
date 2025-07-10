@@ -32,6 +32,46 @@ describe('Api tests with MongoDB', async () => {
         assert(blogKeys.includes('id'))
         assert(!blogKeys.includes('_id'))
     })
+
+    test('A valid blog can be added ', async () => {
+      const newBlog = {
+           title: "Hawaii1234",
+            author: "Paco",
+            url: "http://wazaaaaaaa.com",
+            likes: 10
+        }
+    
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+      const blogsAtEnd = await helper.blogsInDb()
+    
+      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+    
+      const titles = blogsAtEnd.map(n => n.title)
+    
+      assert(titles.includes("Hawaii1234"))
+    })
+
+    test('When passed a blog without likes, 0 is the default value', async () => {
+        const newBlog = {
+            title: "Hawaii1234",
+            author: "Paco",
+            url: "http://wazaaaaaaa.com"
+        }
+
+        const blogAdded = await api.post('/api/blogs')
+                        .send(newBlog)
+                        .expect(201)
+                        .expect('Content-Type', /application\/json/)
+        
+
+        assert.strictEqual(blogAdded.body.likes, 0)
+
+    })
 })
 
 after(() => {
