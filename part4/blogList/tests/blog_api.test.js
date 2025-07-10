@@ -25,6 +25,13 @@ describe('Api tests with MongoDB', async () => {
         
         assert.strictEqual(response.body.length, helper.initialBlogs.length)
     })
+
+    test('Unique identification of blogs is name id and not _id', async () => {
+        const blogs = await helper.blogsInDb()
+        const blogKeys = Object.keys(blogs[0])
+        assert(blogKeys.includes('id'))
+        assert(!blogKeys.includes('_id'))
+    })
 })
 
 after(() => {
