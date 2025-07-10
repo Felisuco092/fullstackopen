@@ -72,6 +72,30 @@ describe('Api tests with MongoDB', async () => {
         assert.strictEqual(blogAdded.body.likes, 0)
 
     })
+
+    test('Not added when misses title', async () => {
+        const newBlog = {
+            author: "Paco",
+            url: "http://wazaaaaaaa.com",
+            likes: 10
+        }
+        await api.post('/api/blogs')
+                .send(newBlog)
+                .expect(400)
+        
+    })
+
+    test('Not added when misses url', async () => {
+        const newBlog = {
+            title: "Hawaii1234",
+            author: "Paco",
+            likes: 10
+        }
+
+        await api.post('/api/blogs')
+                .send(newBlog)
+                .expect(400)
+    })
 })
 
 after(() => {
