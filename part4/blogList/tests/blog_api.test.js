@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 const api = supertest(app)
 
 
-describe('Api tests with MongoDB', async () => {
+describe('Api tests with MongoDB',  () => {
     beforeEach(async () => {
         await Blog.deleteMany({})
 
@@ -95,6 +95,23 @@ describe('Api tests with MongoDB', async () => {
         await api.post('/api/blogs')
                 .send(newBlog)
                 .expect(400)
+    })
+    
+    describe("Delete of blogs", () => {
+        test('When delete a blog with a valid id, succes with code 204', async () => {
+            const initialBlogs = await helper.blogsInDb()
+            const deleteBlog = initialBlogs[0]
+
+            await api.delete(`/api/blogs/${deleteBlog.id}`)
+                    .expect(204)
+            
+            const blogsAtEnd = await helper.blogsInDb()
+
+            assert.strictEqual(blogsAtEnd.length + 1, initialBlogs.length)
+
+            const titles = blogsAtEnd.map(blog => blog.title)
+            assert(!titles.includes(deleteBlog.title))
+        })
     })
 })
 
