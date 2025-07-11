@@ -113,6 +113,27 @@ describe('Api tests with MongoDB',  () => {
             assert(!titles.includes(deleteBlog.title))
         })
     })
+
+    describe('Update a blog', () => {
+        test('Updated likes with an valid id', async () => {
+            const initialBlogs = await helper.blogsInDb()
+            const updateBlog = initialBlogs[0]
+
+            const newLikes = {
+                title: "Mi vida lujosa en verano",
+                author: "Felix",
+                url: "pruebaaaaaaaaaaa",
+                likes: 10
+            }
+
+            const updated = await api.put(`/api/blogs/${updateBlog.id}`)
+                    .send(newLikes)
+                    .expect(200)
+                    .expect('Content-Type', /application\/json/)
+            
+            assert.strictEqual(updated.body.likes, newLikes.likes)
+        })
+    })
 })
 
 after(() => {
