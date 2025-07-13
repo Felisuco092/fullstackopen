@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const bcrypt = require('bcryptjs')
 
 blogsRouter.get('/', async (request, response, next) => {
   try{
