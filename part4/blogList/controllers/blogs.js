@@ -1,20 +1,32 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 
 blogsRouter.get('/', async (request, response, next) => {
   try{
-    response.json( await Blog.find({}))
+    response.json( await Blog.find({}).populate('user', {username: 1, name: 1}))
   } catch(error) {
     next(error)
   }
 })
 
 blogsRouter.post('/', async (request, response, next) => {
-  const blog = new Blog(request.body)
-  
   try {
-    response.status(201).json(await blog.save())
+    const body = request.body
+    const user = await User.findOne({})
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes,
+      user: user._id
+    })
+    console.log(blog)
+    const savedBlog = new Blog(blog)
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
+    response.status(201).json(await savedBlog.save())
   } catch(error) {
     next(error)
   }
