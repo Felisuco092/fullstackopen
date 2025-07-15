@@ -2,7 +2,8 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const middleWares = require('../utils/middlewares')
+
 
 blogsRouter.get('/', async (request, response, next) => {
   try{
@@ -14,15 +15,11 @@ blogsRouter.get('/', async (request, response, next) => {
 
 
 
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', middleWares.userExtractor, async (request, response, next) => {
   try {
     const body = request.body
 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if(!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
-    const user = await User.findById(decodedToken.id)
+    const user = request.user
     const blog = new Blog({
       title: body.title,
       author: body.author,
@@ -40,15 +37,13 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 })
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', middleWares.userExtractor, async (request, response, next) => {
   const id = request.params.id
   
   try {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if(!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
-    const user = await User.findById(decodedToken.id)
+    
+    const user = request.user
+    console.log(user)
     const blog = await Blog.findById(id)
     if(user._id.toString() !== blog.user.toString()) {
       return response.status(401).send({error:'Unathourized user'})
