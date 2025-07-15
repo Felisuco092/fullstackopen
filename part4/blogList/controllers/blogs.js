@@ -44,8 +44,17 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   const id = request.params.id
   
   try {
-    await Blog.findByIdAndDelete(id)
-    response.status(204).end()
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if(!decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' })
+    }
+    const user = await User.findById(decodedToken.id)
+    const blog = await Blog.findById(id)
+    if(user._id.toString() !== blog.user.toString()) {
+      return response.status(401).send({error:'Unathourized user'})
+    }
+    await blog.deleteOne()
+    return response.status(204).end()
   } catch(error) {
     next(error)
   }
