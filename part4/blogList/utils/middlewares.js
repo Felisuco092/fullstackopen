@@ -16,8 +16,26 @@ const errorMiddleware = (error, request, response, next) => {
     }
     next(error)
 }
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
+
+const tokenExtractor = ( request, response, next ) => {
+    let authorization = request.get('authorization')
+    if (authorization && authorization.startsWith('Bearer ')) {
+        authorization = authorization.replace('Bearer ', '')
+    }
+
+    request.token = authorization
+    next()
+}
 
 module.exports = {
     unknownEndpoint,
-    errorMiddleware
+    errorMiddleware,
+    tokenExtractor
 }
