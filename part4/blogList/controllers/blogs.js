@@ -43,7 +43,7 @@ blogsRouter.delete('/:id', middleWares.userExtractor, async (request, response, 
   try {
     
     const user = request.user
-    console.log(user)
+
     const blog = await Blog.findById(id)
     if(user._id.toString() !== blog.user.toString()) {
       return response.status(401).send({error:'Unathourized user'})

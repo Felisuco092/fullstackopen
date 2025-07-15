@@ -22,6 +22,11 @@ const initialUsers = [
     username: "test_user",
     name: "test",
     passwordHash: bcrypt.hashSync("test", 10)
+  },
+  {
+    username: "test_user2",
+    name: "test",
+    passwordHash: bcrypt.hashSync("test", 10)
   }
 ]
 
