@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Form from './components/Form'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -9,6 +10,11 @@ const App = () => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
   useEffect(() => {
     blogService.getAll().then(blogs =>{
       setBlogs( blogs )
@@ -17,7 +23,9 @@ const App = () => {
   useEffect(() => {
     const infoUser = window.localStorage.getItem("blogListApp")
     if(infoUser) {
-      setUser(JSON.parse(infoUser))
+      const user = JSON.parse(infoUser)
+      setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -30,6 +38,7 @@ const App = () => {
     })
     .then(response => {
       window.localStorage.setItem("blogListApp", JSON.stringify(response))
+      blogService.setToken(user.token)
       setUser(response)
       setUserName('')
       setPassword('')
@@ -44,6 +53,10 @@ const App = () => {
     setUser(null)
   }
 
+  const handlePost = () => {
+    blogService.post({title, author, url})
+  }
+
   const showBlogs = () => 
     <>
       <h2>blogs</h2>
@@ -53,6 +66,9 @@ const App = () => {
           return <Blog key={blog.id} blog={blog} />
       }
       )}
+      <h1>create new</h1>
+      <BlogForm handlePost={handlePost} title={title} author={author} url={url}
+        setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}/>
     </>
 
   return (
