@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import Form from './components/Form'
 import BlogForm from './components/BlogForm'
 import CorrectMessage from './components/CorrectMessage'
+import ErrorMessage from './components/ErrorMessage'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -17,6 +18,7 @@ const App = () => {
   const [url, setUrl] = useState('')
 
   const [correctMessage, setCorrectMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>{
@@ -41,13 +43,16 @@ const App = () => {
     })
     .then(response => {
       window.localStorage.setItem("blogListApp", JSON.stringify(response))
-      blogService.setToken(user.token)
+      blogService.setToken(response.token)
       setUser(response)
       setUserName('')
       setPassword('')
     })
     .catch(error => {
-      alert("error in password or username")
+      setErrorMessage("error in password or username")
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
     })
   }
 
@@ -67,6 +72,12 @@ const App = () => {
         setCorrectMessage(null)
       }, 3000)
     })
+    .catch((error) => {
+      setErrorMessage(error.message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+    })
   }
 
   const showBlogs = () => 
@@ -75,6 +86,7 @@ const App = () => {
       {
         correctMessage && <CorrectMessage title={correctMessage.title} author={correctMessage.author} />   
       }
+      
       <p>{user.name} logged in <button onClick={handleLogOut}>logout</button></p>
       {blogs.map(blog => {
           console.log("blog");
@@ -88,6 +100,9 @@ const App = () => {
 
   return (
     <div>
+      {
+        errorMessage && <ErrorMessage error={errorMessage} />
+      }
       {user === null ? <Form handleLogin={handleLogin} setUsername={setUserName} setPassword={setPassword} 
         username={userName} password={password}/> :
         showBlogs()}
