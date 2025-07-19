@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Form from './components/Form'
 import BlogForm from './components/BlogForm'
+import CorrectMessage from './components/CorrectMessage'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -14,6 +15,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [correctMessage, setCorrectMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>{
@@ -53,13 +56,25 @@ const App = () => {
     setUser(null)
   }
 
-  const handlePost = () => {
+  const handlePost = (event) => {
+    event.preventDefault()
     blogService.post({title, author, url})
+    .then(msg => {
+      setBlogs(blogs.concat(msg))
+      setCorrectMessage({title: msg.title,
+        author: msg.author})
+      setTimeout(() => {
+        setCorrectMessage(null)
+      }, 3000)
+    })
   }
 
   const showBlogs = () => 
     <>
       <h2>blogs</h2>
+      {
+        correctMessage && <CorrectMessage title={correctMessage.title} author={correctMessage.author} />   
+      }
       <p>{user.name} logged in <button onClick={handleLogOut}>logout</button></p>
       {blogs.map(blog => {
           console.log("blog");
