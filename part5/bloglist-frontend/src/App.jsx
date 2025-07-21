@@ -25,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>{
-      setBlogs( blogs )
+      setBlogs( blogs.sort((a, b) => a.likes - b.likes) )
     })  
   }, [])
   useEffect(() => {
@@ -70,7 +70,7 @@ const App = () => {
       const final = {...msg, user: {
         username:user.username
       }}
-      setBlogs(blogs.concat(final))
+      setBlogs(blogs.concat(final).sort((a, b) => a.likes - b.likes))
       noteFormRef.current.toggleVisibility()
       setCorrectMessage({title: msg.title,
         author: msg.author})
@@ -86,6 +86,27 @@ const App = () => {
     })
   }
 
+  const sortBlogs = (blogs) => {
+    setBlogs(blogs.sort((a, b) => a.likes - b.likes))
+  }
+
+  const put = (like, blog, setLike) => {
+    blogService.put({
+          user: blog.user.id,
+          likes: like+1,
+          author: blog.author,
+          title: blog.title,
+          url: blog.url
+        },
+        blog.id)
+        .then(data => {
+          setLike(data.likes)
+          const sort = blogs.map(b => b.id === blog.id ? {...b, likes:data.likes } : b)
+          sortBlogs(sort)
+        })
+    
+  }
+
   const showBlogs = () => 
     <>
       
@@ -95,7 +116,7 @@ const App = () => {
       
       
       {blogs.map(blog => {
-          return <Blog key={blog.id} blog={blog} />
+          return <Blog key={blog.id} blog={blog} put={put}/>
       }
       )}
       

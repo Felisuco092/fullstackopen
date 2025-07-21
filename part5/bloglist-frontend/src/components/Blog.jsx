@@ -1,6 +1,6 @@
 import { useState } from "react"
 import blogService from '../services/blogs'
-const Blog = ({ blog }) => {
+const Blog = ({ blog, put }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -16,17 +16,7 @@ const Blog = ({ blog }) => {
     setShow(!show)
   }
   const handleLike = () => {
-    blogService.put({
-      user: blog.user.id,
-      likes: like+1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url
-    },
-    blog.id)
-    .then(data => {
-      setLike(data.likes)
-    })
+    put(like, blog, setLike)
   }
   if(show) {
     return (
