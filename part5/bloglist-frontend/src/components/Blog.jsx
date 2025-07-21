@@ -1,6 +1,6 @@
 import { useState } from "react"
 import blogService from '../services/blogs'
-const Blog = ({ blog, put }) => {
+const Blog = ({ blog, put, handleRemove }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -18,6 +18,11 @@ const Blog = ({ blog, put }) => {
   const handleLike = () => {
     put(like, blog, setLike)
   }
+  const remove = () => {
+    if (window.confirm(`Remove blog ${blog.title + " by " + blog.author}`)) {
+      handleRemove(blog.id)
+    }
+  }
   if(show) {
     return (
       <div style={blogStyle}>
@@ -25,6 +30,7 @@ const Blog = ({ blog, put }) => {
         {blog.url} <br />
         likes {like} <button onClick={handleLike}>like</button> <br />
         {blog.user.username} <br />
+        <button onClick={remove}>remove</button>
       </div>
     )
   } else {

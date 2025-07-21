@@ -107,6 +107,13 @@ const App = () => {
     
   }
 
+  const handleRemove = (id) => {
+    blogService.deleteBlog(id)
+    .then(data => {
+      setBlogs(blogs.filter(blog => blog.id !== id))
+    })
+  }
+
   const showBlogs = () => 
     <>
       
@@ -116,7 +123,7 @@ const App = () => {
       
       
       {blogs.map(blog => {
-          return <Blog key={blog.id} blog={blog} put={put}/>
+          return <Blog key={blog.id} blog={blog} put={put} handleRemove={handleRemove}/>
       }
       )}
       

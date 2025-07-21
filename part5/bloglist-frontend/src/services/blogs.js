@@ -26,4 +26,12 @@ const put = (blog, id) => {
   return response.then(res => res.data)
 }
 
-export default { getAll, setToken, post, put }
+const deleteBlog = (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = axios.delete(`${baseUrl}/${id}`, config)
+  return response.then(res => res.data)
+}
+
+export default { getAll, setToken, post, put, deleteBlog }
