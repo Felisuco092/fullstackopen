@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Form from './components/Form'
 import BlogForm from './components/BlogForm'
 import CorrectMessage from './components/CorrectMessage'
 import ErrorMessage from './components/ErrorMessage'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -19,6 +20,8 @@ const App = () => {
 
   const [correctMessage, setCorrectMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+
+  const noteFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>{
@@ -66,6 +69,10 @@ const App = () => {
     blogService.post({title, author, url})
     .then(msg => {
       setBlogs(blogs.concat(msg))
+      setAuthor('')
+      setTitle('')
+      setUrl('')
+      noteFormRef.current.toggleVisibility()
       setCorrectMessage({title: msg.title,
         author: msg.author})
       setTimeout(() => {
@@ -82,20 +89,17 @@ const App = () => {
 
   const showBlogs = () => 
     <>
-      <h2>blogs</h2>
+      
       {
         correctMessage && <CorrectMessage title={correctMessage.title} author={correctMessage.author} />   
       }
       
-      <p>{user.name} logged in <button onClick={handleLogOut}>logout</button></p>
+      
       {blogs.map(blog => {
-          console.log("blog");
           return <Blog key={blog.id} blog={blog} />
       }
       )}
-      <h1>create new</h1>
-      <BlogForm handlePost={handlePost} title={title} author={author} url={url}
-        setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}/>
+      
     </>
 
   return (
@@ -103,9 +107,23 @@ const App = () => {
       {
         errorMessage && <ErrorMessage error={errorMessage} />
       }
-      {user === null ? <Form handleLogin={handleLogin} setUsername={setUserName} setPassword={setPassword} 
+      {user === null ? 
+        <Form handleLogin={handleLogin} setUsername={setUserName} setPassword={setPassword} 
         username={userName} password={password}/> :
-        showBlogs()}
+        <>
+          <h2>blogs</h2>
+          <p>{user.name} logged in <button onClick={handleLogOut}>logout</button></p>
+          
+          <Togglable buttonLabel="new note" ref={noteFormRef}>
+            <h1>create new</h1>
+            <BlogForm handlePost={handlePost} title={title} author={author} url={url}
+            setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}/>
+          </Togglable>
+        </>}
+
+      {showBlogs()}
+      
+      
     </div>
   )
 }
