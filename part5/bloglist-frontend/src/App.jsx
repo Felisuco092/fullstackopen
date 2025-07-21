@@ -67,7 +67,10 @@ const App = () => {
   const handlePost = (data) => {
     blogService.post(data)
     .then(msg => {
-      setBlogs(blogs.concat(msg))
+      const final = {...msg, user: {
+        username:user.username
+      }}
+      setBlogs(blogs.concat(final))
       noteFormRef.current.toggleVisibility()
       setCorrectMessage({title: msg.title,
         author: msg.author})

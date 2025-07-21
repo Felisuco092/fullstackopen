@@ -8,7 +8,6 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  console.log(blog)
 
   const [show, setShow] = useState(false)
   const [like, setLike] = useState(blog.likes)
@@ -32,10 +31,10 @@ const Blog = ({ blog }) => {
   if(show) {
     return (
       <div style={blogStyle}>
-        {blog.title}<button onClick={changeView}>hide</button> <br/>
+        {blog.title + " " + blog.author} <button onClick={changeView}>hide</button> <br/>
         {blog.url} <br />
         likes {like} <button onClick={handleLike}>like</button> <br />
-        {blog.author} <br />
+        {blog.user.username} <br />
       </div>
     )
   } else {
