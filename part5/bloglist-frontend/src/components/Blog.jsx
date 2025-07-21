@@ -1,4 +1,5 @@
 import { useState } from "react"
+import blogService from '../services/blogs'
 const Blog = ({ blog }) => {
   const blogStyle = {
     paddingTop: 10,
@@ -7,18 +8,33 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+  console.log(blog)
 
   const [show, setShow] = useState(false)
+  const [like, setLike] = useState(blog.likes)
 
   const changeView = () => {
     setShow(!show)
+  }
+  const handleLike = () => {
+    blogService.put({
+      user: blog.user.id,
+      likes: like+1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    },
+    blog.id)
+    .then(data => {
+      setLike(data.likes)
+    })
   }
   if(show) {
     return (
       <div style={blogStyle}>
         {blog.title}<button onClick={changeView}>hide</button> <br/>
         {blog.url} <br />
-        likes {blog.likes} <button>like</button> <br />
+        likes {like} <button onClick={handleLike}>like</button> <br />
         {blog.author} <br />
       </div>
     )

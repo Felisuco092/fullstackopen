@@ -21,4 +21,9 @@ const post = (blog) => {
   return response.then(res => res.data)
 }
 
-export default { getAll, setToken, post }
+const put = (blog, id) => {
+  const response = axios.put(`${baseUrl}/${id}`, blog)
+  return response.then(res => res.data)
+}
+
+export default { getAll, setToken, post, put }
