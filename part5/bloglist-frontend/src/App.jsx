@@ -64,14 +64,10 @@ const App = () => {
     setUser(null)
   }
 
-  const handlePost = (event) => {
-    event.preventDefault()
-    blogService.post({title, author, url})
+  const handlePost = (data) => {
+    blogService.post(data)
     .then(msg => {
       setBlogs(blogs.concat(msg))
-      setAuthor('')
-      setTitle('')
-      setUrl('')
       noteFormRef.current.toggleVisibility()
       setCorrectMessage({title: msg.title,
         author: msg.author})
@@ -116,8 +112,7 @@ const App = () => {
           
           <Togglable buttonLabel="new note" ref={noteFormRef}>
             <h1>create new</h1>
-            <BlogForm handlePost={handlePost} title={title} author={author} url={url}
-            setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}/>
+            <BlogForm createBlog={handlePost}/>
           </Togglable>
         </>}
 
