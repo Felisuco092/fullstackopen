@@ -1,0 +1,2 @@
+# PropType is no longer available in React 19 so I can't make it to work here, to make warnings you need to check the variable types manually and see if the variable is null or not.
+# One alternative that the people recommend is using TypeScript but I don't know nothing about it

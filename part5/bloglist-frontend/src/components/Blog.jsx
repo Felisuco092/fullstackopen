@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 import blogService from '../services/blogs'
 const Blog = ({ blog, put, handleRemove }) => {
   const blogStyle = {
@@ -19,14 +19,14 @@ const Blog = ({ blog, put, handleRemove }) => {
     put(like, blog, setLike)
   }
   const remove = () => {
-    if (window.confirm(`Remove blog ${blog.title + " by " + blog.author}`)) {
+    if (window.confirm(`Remove blog ${blog.title + ' by ' + blog.author}`)) {
       handleRemove(blog.id)
     }
   }
   if(show) {
     return (
       <div style={blogStyle}>
-        {blog.title + " " + blog.author} <button onClick={changeView}>hide</button> <br/>
+        {blog.title + ' ' + blog.author} <button onClick={changeView}>hide</button> <br/>
         {blog.url} <br />
         likes {like} <button onClick={handleLike}>like</button> <br />
         {blog.user.username} <br />
@@ -38,7 +38,7 @@ const Blog = ({ blog, put, handleRemove }) => {
       <div style={blogStyle}>
         {blog.title} {blog.author}
         <button onClick={changeView}>view</button>
-      </div>  
+      </div>
     )
   }
 }

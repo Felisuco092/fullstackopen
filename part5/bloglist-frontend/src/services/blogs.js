@@ -17,7 +17,6 @@ const post = (blog) => {
     headers: { Authorization: token },
   }
   const response = axios.post(baseUrl, blog, config)
-  
   return response.then(res => res.data)
 }
 
