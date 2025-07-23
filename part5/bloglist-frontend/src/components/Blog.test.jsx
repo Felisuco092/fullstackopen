@@ -30,5 +30,45 @@ describe('<Blog />', () => {
         expect(like).toBeDefined()
 
     })
+
+    test('When pressed view button and hide button, the url and likes are not displayed', async () => {
+        const blog = {title: 'React blog', author: 'Felix', likes: 5, url: 'https://ey.com', user:{username:"Root"}}
+        const container = render(<Blog blog={ blog }/>).container
+
+        const user = userEvent.setup()
+
+        const view = screen.getByText('view')
+        await user.click(view)
+
+        const hide = screen.getByText('hide')
+        await user.click(hide)
+
+        const url = screen.queryByText('https://ey.com', { exact: false })
+        const like = screen.queryByText('5', { exact: false })
+
+
+        expect(url).toBeNull()
+        expect(like).toBeNull()
+
+    })
+
+    test('When liked a blog 2 times, the controller is called 2 times', async () => {
+        const blog = {title: 'React blog', author: 'Felix', likes: 5, url: 'https://ey.com', user:{username:"Root"}}
+
+        const mockFunction = vi.fn()
+
+        const container = render(<Blog blog={ blog } put={mockFunction}/>).container
+
+        const user = userEvent.setup()
+
+        const view = screen.getByText('view')
+        await user.click(view)
+
+        const like = screen.getByText('like')
+        await user.dblClick(like)
+
+        expect(mockFunction.mock.calls).toHaveLength(2)
+
+    })
     
 })
