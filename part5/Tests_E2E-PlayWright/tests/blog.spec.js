@@ -77,5 +77,52 @@ describe('Blog app', () => {
     await expect(page.getByText('First blog Miguel de')).toBeVisible()
 
   })
+
+  describe('With one blog', () => {
+    beforeEach(async ({ page }) => {
+        await page.getByRole('button', { name: 'new note' }).click()
+
+        const titleInput = await page.locator('#title-input')
+        const authorInput = await page.locator('#author-input')
+        const urlInput = await page.locator('#url-input')
+
+        await titleInput.fill('First blog')
+        await authorInput.fill('Miguel de Cervantes')
+        await urlInput.fill('http://rae.es')
+
+
+        await page.getByRole('button', { name: 'create' }).click()
+
+        await page.getByText('First blog Miguel de').waitFor()
+
+    })
+
+    test('a blog can be edited', async ({ page, request }) => {
+        const response = await request.get('http://localhost:3001/api/blogs/');
+        const blogs = await response.json()
+        const id = blogs[0].id
+        
+        
+        await request.put('http://localhost:3001/api/blogs/' + id, {
+            data: {
+                title: 'Second blog',
+                author: 'Miguel de Cervantes',
+                url: 'http://rae.es',
+                likes: 0,
+                user: blogs[0].user.id
+            }
+        })
+
+        await page.goto('http://localhost:5173')
+
+        
+
+        await expect(page.getByText('Second blog Miguel de')).toBeVisible()
+
+    })
+  })
+
+
+  
 })
 })
