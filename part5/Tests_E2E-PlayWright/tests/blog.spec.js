@@ -49,4 +49,33 @@ describe('Blog app', () => {
       await expect(page.locator('.error-Message')).toBeVisible()
     })
   })
+
+  describe('When logged in', () => {
+  beforeEach(async ({ page }) => {
+    const usernameInput = await page.locator('input[name="Username"]')
+    const passwordInput = await page.locator('input[name="Password"]')
+
+    await usernameInput.fill('Test-Felix')
+    await passwordInput.fill('test-E2E')
+
+    await page.getByRole('button', { name: 'login' }).click()
+  })
+
+  test('a new blog can be created', async ({ page }) => {
+    await page.getByRole('button', { name: 'new note' }).click()
+
+    const titleInput = await page.locator('#title-input')
+    const authorInput = await page.locator('#author-input')
+    const urlInput = await page.locator('#url-input')
+
+    await titleInput.fill('First blog')
+    await authorInput.fill('Miguel de Cervantes')
+    await urlInput.fill('http://rae.es')
+
+    await page.getByRole('button', { name: 'create' }).click()
+
+    await expect(page.getByText('First blog Miguel de')).toBeVisible()
+
+  })
+})
 })
