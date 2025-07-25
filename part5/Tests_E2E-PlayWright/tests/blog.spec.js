@@ -120,6 +120,14 @@ describe('Blog app', () => {
         await expect(page.getByText('Second blog Miguel de')).toBeVisible()
 
     })
+
+    test('a blog can be deleted', async ({ page }) => {
+      await page.getByRole('button', { name: 'view' }).click()
+      page.on('dialog', dialog => dialog.accept());
+      await page.getByRole('button', { name: 'remove' }).click()
+
+      await expect(page.getByText('First blog Miguel de')).not.toBeVisible()
+    })
   })
 
 
