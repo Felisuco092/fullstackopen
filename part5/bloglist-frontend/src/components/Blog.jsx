@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
-const Blog = ({ blog, put, handleRemove }) => {
+const Blog = ({ blog, put, handleRemove, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -30,7 +30,7 @@ const Blog = ({ blog, put, handleRemove }) => {
         {blog.url} <br />
         likes {like} <button onClick={handleLike}>like</button> <br />
         {blog.user.username} <br />
-        <button onClick={remove}>remove</button>
+        {user && blog.user.username === user.username && <button onClick={remove}>remove</button>}
       </div>
     )
   } else {

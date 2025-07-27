@@ -117,7 +117,7 @@ const App = () => {
     <>
       { correctMessage && <CorrectMessage title={correctMessage.title} author={correctMessage.author} /> }
       {blogs.map(blog => {
-        return <Blog key={blog.id} blog={blog} put={put} handleRemove={handleRemove}/>
+        return <Blog key={blog.id} blog={blog} put={put} handleRemove={handleRemove} user={user}/>
       }
       )}
     </>
