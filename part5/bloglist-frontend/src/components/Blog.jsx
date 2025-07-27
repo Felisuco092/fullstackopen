@@ -28,7 +28,7 @@ const Blog = ({ blog, put, handleRemove, user }) => {
       <div style={blogStyle}>
         {blog.title + ' ' + blog.author} <button onClick={changeView}>hide</button> <br/>
         {blog.url} <br />
-        likes {like} <button onClick={handleLike}>like</button> <br />
+        likes <span data-testid="like-count">{like}</span> <button onClick={handleLike} data-testid="like-button">like</button> <br />
         {blog.user.username} <br />
         {user && blog.user.username === user.username && <button onClick={remove}>remove</button>}
       </div>

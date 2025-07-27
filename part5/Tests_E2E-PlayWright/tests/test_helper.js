@@ -22,6 +22,7 @@ const CreateBlog = async (page, title, author, url) => {
     await urlInput.fill(url)
 
     await page.getByRole('button', { name: 'create' }).click()
+    await page.getByText(title +' '+ author).waitFor()
 }
 
 const LogIn = async (page, username, password) => {
@@ -33,5 +34,7 @@ const LogIn = async (page, username, password) => {
 
     await page.getByRole('button', { name: 'login' }).click()
 }
+
+
 
 module.exports = { PostUser, CreateBlog, LogIn }

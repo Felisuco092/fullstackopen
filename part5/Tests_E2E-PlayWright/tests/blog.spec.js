@@ -56,7 +56,7 @@ describe('Blog app', () => {
     beforeEach(async ({ page }) => {
         await helper.CreateBlog(page, 'First blog', 'Miguel de Cervantes', 'http://rae.es')
 
-        await page.getByRole('button', { name: 'create' }).click()
+        
 
         await page.getByText('First blog Miguel de').waitFor()
 
@@ -107,6 +107,49 @@ describe('Blog app', () => {
 
 
       expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+    })
+  })
+
+  describe('various blogs', () => {
+    beforeEach(async ({ page }) => {
+      const titles = ["First blog", "Second blog", "Third blog"];
+
+      for (const title of titles) {
+        await helper.CreateBlog(page, title, 'a', 'a');
+      }
+
+
+      let views = await [page.locator('div').filter({ hasText: /^First blog aview$/ }).getByRole('button'),
+        page.locator('div').filter({ hasText: /^Second blog aview$/ }).getByRole('button'),
+        page.locator('div').filter({ hasText: /^Third blog aview$/ }).getByRole('button')
+      ]
+
+      for (const view of views) {
+        await view.click();
+      }
+      await expect(page.getByText('Third blog a')).toBeVisible()
+
+      const likes = await page.getByTestId('like-button').all()
+      console.log(likes)
+      await likes[2].click()
+      await expect(page.getByText('Third blog a hide a likes 1')).toBeVisible()
+      await likes[2].click()
+      await likes[1].click()
+      await expect(page.getByText('Second blog a hide a likes 1')).toBeVisible()
+
+    })
+
+    test('The three blogs are displayed', async ({ page }) => {
+      await expect(page.getByText('First blog a')).toBeVisible()
+      await expect(page.getByText('Second blog a')).toBeVisible()
+      await expect(page.getByText('Third blog a')).toBeVisible()
+    })
+
+    test('The blogs are ordered by the quantity of likes', async ({ page }) => {
+      const blogs = await page.getByTestId('like-count').allTextContents()
+      const sort = [... blogs].sort((a,b) => Number(a) > Number(b))
+
+      expect(blogs).toEqual(sort)
     })
   })
 
