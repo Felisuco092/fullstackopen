@@ -18,9 +18,10 @@ const Anecdote = ({ vote, anecdote }) => {
 const AnecdoteList = () => {
 
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => {
-      return state.anecdotes.filter(anecdote => anecdote.content.includes(state.filter))
-    })
+    const allAnecdotes = useSelector(state => state.anecdotes)
+    const filter = useSelector(state => state.filter)
+    
+    const anecdotes = allAnecdotes.filter(anecdote => anecdote.content.includes(filter))
 
     const vote = (id) => {
         console.log('vote', id)
