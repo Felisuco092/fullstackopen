@@ -12,7 +12,7 @@ const anecdoteSlice = createSlice({
           return finalState
         },
         newAnecdote(state, action) {
-          return state.concat(asObject(action.payload))
+          return state.concat(action.payload)
         },
         setAnecdotes(state, action) {
           return action.payload
