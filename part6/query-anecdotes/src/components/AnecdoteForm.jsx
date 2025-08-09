@@ -1,16 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { useTemporalNotification } from '../NotificationContext'
 
 const AnecdoteForm = () => {
 
   const queryClient = useQueryClient()
+  const showNotification = useTemporalNotification()
 
   const newAnecdoteMutation = useMutation({
     mutationFn: (newAnecdote) => axios.post('http://localhost:3001/anecdotes/', newAnecdote).then(response => response.data),
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
-      console.log(anecdotes)
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
+      showNotification(`anecdote '${newAnecdote.content}' created`, 5)
     }
   })
 

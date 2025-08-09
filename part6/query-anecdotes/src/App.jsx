@@ -2,10 +2,12 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { useTemporalNotification } from './NotificationContext'
 
 const App = () => {
 
   const queryClient = useQueryClient()
+  const showNotification = useTemporalNotification()
 
   const voteAnAnecdoteMutation = useMutation({
     mutationFn: (anecdote) => {
@@ -21,6 +23,7 @@ const App = () => {
 
   const handleVote = (anecdote) => {
     console.log('vote')
+    showNotification(`anecdote '${anecdote.content}' voted`, 5)
     voteAnAnecdoteMutation.mutate(anecdote)
   }
 
